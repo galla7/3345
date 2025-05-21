@@ -1,5 +1,9 @@
 name: NodeJS with Webpack
 
+# Workflow-level variable (global)
+env:
+  MY_WORKFLOW_VARIABLE: "This is available to ALL jobs and steps"
+
 on:
   push:
     branches: [ "main" ]
@@ -10,20 +14,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    # Job-level variable (available only in this job)
+    env:
+      MY_JOB_VARIABLE: "This is only for the build job"
+
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      run: echo "Skipping build since this is a test workflow"
+      - name: Build
+        run: echo "Skipping build since this is a test workflow"
         
-    - name: Displaying a message
-      run: echo "Hello! This is task-1"
+      - name: Displaying a message
+        run: |
+          echo "Hello! This is task-1"
+          echo "Workflow var: ${{ env.MY_WORKFLOW_VARIABLE }}"
+          echo "Job var: ${{ env.MY_JOB_VARIABLE }}"
+
+      - name: Step with local variable
+        # Step-level variable (available only in this step)
+        env:
+          MY_STEP_VARIABLE: "This is only for this step"
+        run: |
+          echo "Step var: ${{ env.MY_STEP_VARIABLE }}"
+          echo "Job var is still accessible: ${{ env.MY_JOB_VARIABLE }}"
+          echo "Workflow var is still accessible: ${{ env.MY_WORKFLOW_VARIABLE }}"
