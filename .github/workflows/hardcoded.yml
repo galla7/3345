@@ -1,0 +1,13 @@
+name: INSECURE Hardcoded Key Demo
+on: [push]
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Expose Hardcoded Key
+        run: |
+          echo "HARDCODED KEY: 12345-INSECURE-KEY"
+          # Simulate using the key
+          echo "Pretending to call an API with key: 12345-INSECURE-KEY"
