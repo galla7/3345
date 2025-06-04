@@ -19,3 +19,14 @@ jobs:
         with:
           name: build-artifact
           path: output/artifact.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output/artifact.txt
+      - name: Upload Artifact with Retention
+        uses: actions/upload-artifact@v3
+        with:
+          name: persistent-artifact
+          path: output/artifact.txt
+          retention-days: 30          
