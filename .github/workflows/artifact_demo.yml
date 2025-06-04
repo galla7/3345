@@ -1,0 +1,27 @@
+name: Artifact Demo
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Artifact
+        run: |
+          mkdir -p dist
+          echo "Hello, Artifacts!" > dist/output.txt
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+
+  download:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: build-output
+      - run: cat output.txt 
