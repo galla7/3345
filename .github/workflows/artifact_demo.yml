@@ -1,27 +1,21 @@
-name: Artifact Demo
-on: [push]
+name: Build & Artifact Workflow
+on: push
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      - name: Generate Artifact
+      - name: Build Project
         run: |
-          mkdir -p dist
-          echo "Hello, Artifacts!" > dist/output.txt
+          echo "Compiling project..."
+          mkdir output
+          echo "Sample artifact content" > output/artifact.txt
 
-      - uses: actions/upload-artifact@v3
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
         with:
-          name: build-output
-          path: dist/
-
-  download:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/download-artifact@v3
-        with:
-          name: build-output
-      - run: cat output.txt 
+          name: build-artifact
+          path: output/artifact.txt
